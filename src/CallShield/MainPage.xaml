@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Toolkit.Popup;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:viewModels="clr-namespace:CallShield.UI.ViewModels"
+             xmlns:converters="clr-namespace:CallShield.UI.Converters"
+             xmlns:models="clr-namespace:CallShield.UI.Models"
+             x:Class="CallShield.UI.MainPage"
+             x:DataType="viewModels:MainPageViewModel"
+             x:Name="CallShieldMainPage">
+
+    <ContentPage.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,1*" Padding="30,25,30,35">
+        <Label
+            Text="List of blocked calls:"
+            Style="{StaticResource SubHeadline}"
+            SemanticProperties.HeadingLevel="Level1"
+            Padding="0, 0, 0, 25"
+            x:Name="label"/>
+
+        <syncfusion:SfPopup IsOpen="{Binding ShowPopup}" HeaderTitle="Options:">
+            <syncfusion:SfPopup.ContentTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="Auto,Auto"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          ColumnSpacing="20">
+                        <Button
+                            x:DataType="viewModels:MainPageViewModel"
+                            Text="Block Number"
+                            Grid.Column="0"
+                            HorizontalOptions="Center"
+                            Command="{Binding BlockNumberCommand}"/>
+                        <Button
+                            x:DataType="viewModels:MainPageViewModel"
+                            Text="Save Contact"
+                            Grid.Column="1"
+                            HorizontalOptions="Center"
+                            Command="{Binding SaveContactCommand}"/>
+
+                    </Grid>
+                </DataTemplate>
+            </syncfusion:SfPopup.ContentTemplate>
+        </syncfusion:SfPopup>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding ListOfBlockedCalls}"
+                        VerticalOptions="Fill"
+                        VerticalScrollBarVisibility="Never"
+                        IsGrouped="True"
+                        SelectionMode="None"
+                        x:Name="collectionView">
+            <CollectionView.EmptyView>
+                <ContentView>
+                    <Label FontSize="18"
+                           Text="No calls have been blocked yet.&#10;&#10;As spam or robocalls come in, we’ll log them here."
+                           TextColor="#D3D3D3"/>
+                </ContentView>
+            </CollectionView.EmptyView>
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="models:BlockedCalls">
+                    <Label Text="{Binding Date}" FontSize="25" />
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:CallDetails">
+                    <Grid ColumnDefinitions="1*,2*,2*"
+                          RowDefinitions="Auto,1*"
+                          Padding="15,12">
+                        <Grid.Behaviors>
+                            <toolkit:TouchBehavior
+                                LongPressDuration="1000"
+                                PressedAnimationDuration="1000"
+                                LongPressCompleted="OnLongPressCompleted"
+                                PressedBackgroundColor="#BEBEBE"
+                                DefaultBackgroundColor="Transparent"/>
+                        </Grid.Behaviors>
+
+                        <Label Text="{Binding Name}"
+                               VerticalOptions="Center"
+                               FontSize="12"
+                               Grid.Row="0"
+                               Grid.Column="0" />
+                        <Label Text="{Binding PhoneNumber}"
+                               VerticalOptions="Center"
+                               FontSize="12"
+                               HorizontalOptions="End"
+                               Grid.Row="0"
+                               Grid.Column="1" />
+                        <Label Text="{Binding Time}"
+                               VerticalOptions="Center"
+                               FontSize="12"
+                               HorizontalOptions="End"
+                               Grid.Row="0"
+                               Grid.Column="2" />
+
+                        <BoxView Grid.Row="1"
+                                 Grid.ColumnSpan="3"
+                                 HeightRequest="1"
+                                 Color="#DDD" />
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
