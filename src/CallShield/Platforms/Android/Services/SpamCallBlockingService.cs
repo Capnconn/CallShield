@@ -1,6 +1,6 @@
 ﻿using Android.App;
 using Android.Telecom;
-using CallShield.DataAccess.Models;
+using CallShield.UI.Models;
 using CallShield.UI.Processors;
 
 namespace CallShield.UI.Platforms.Android.Services;

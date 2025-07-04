@@ -1,5 +1,5 @@
-﻿using CallShield.DataAccess.Models;
-using CallShield.UI.Messages;
+﻿using CallShield.UI.Messages;
+using CallShield.UI.Models;
 using CommunityToolkit.Mvvm.Messaging;
 
 namespace CallShield.UI.Processors

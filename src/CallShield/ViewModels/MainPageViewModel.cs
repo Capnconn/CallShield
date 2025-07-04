@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using CallShield.DataAccess.Models;
 using CallShield.UI.Messages;
 using CallShield.UI.Models;
 using CommunityToolkit.Mvvm.ComponentModel;

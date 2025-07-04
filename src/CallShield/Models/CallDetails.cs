@@ -1,4 +1,4 @@
-﻿namespace CallShield.DataAccess.Models
+﻿namespace CallShield.UI.Models
 {
     public class CallDetails(string name, string phoneNumber, DateTime date)
     {
