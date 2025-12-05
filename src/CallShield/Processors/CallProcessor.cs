@@ -1,5 +1,5 @@
-﻿using CallShield.UI.Messages;
-using CallShield.UI.Models;
+﻿using CallShield.Common.Models;
+using CallShield.UI.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 
 namespace CallShield.UI.Processors
@@ -10,12 +10,12 @@ namespace CallShield.UI.Processors
         /// Processes the call details.
         /// </summary>
         /// <param name="callDetails">The details of the call to display.</param>
-        void ProcessCall(CallDetails callDetails);
+        void NotifyOfBlockedCall(CallDetails callDetails);
     }
 
     public class CallProcessor() : ICallProcessor
     {
-        public void ProcessCall(CallDetails callDetails)
+        public void NotifyOfBlockedCall(CallDetails callDetails)
             => WeakReferenceMessenger.Default.Send(new CallReceivedMessage(callDetails));
     }
 }

@@ -1,4 +1,4 @@
-﻿using CallShield.UI.Models;
+﻿using CallShield.Common.Models;
 using CallShield.UI.ViewModels;
 
 namespace CallShield.UI

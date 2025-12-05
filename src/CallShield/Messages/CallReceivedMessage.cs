@@ -1,4 +1,5 @@
-﻿using CallShield.UI.Models;
+﻿
+using CallShield.Common.Models;
 
 namespace CallShield.UI.Messages
 {

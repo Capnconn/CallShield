@@ -2,21 +2,20 @@
 
 namespace CallShield.DataAccess.Models
 {
-    [Table("CallDetails")]
-    public class CallDetails(string name, string phoneNumber, DateTime date)
+    [Table("call_details")]
+    public class CallDetails()
     {
-        [PrimaryKey]
         [Column("date")]
-        public string Date { get; } = date.ToString("MMMM dd, yyyy");
+        public DateTime Date { get; set; }
 
         [PrimaryKey]
         [Column("phone_number")]
-        public string PhoneNumber { get; } = phoneNumber;
+        public string PhoneNumber { get; set; } = string.Empty;
 
         [Column("name")]
-        public string Name { get; } = name;
+        public string Name { get; set; } = string.Empty;
 
-        [Column("Time")]
-        public string Time { get; } = string.Format("{0:t}", date);
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey(nameof(BlockedCall))]
+        public List<BlockedCall> BlockedCalls { get; } = [];
     }
 }

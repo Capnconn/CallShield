@@ -1,13 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
 	<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+	<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CallShield.Common\CallShield.Common.csproj" />
   </ItemGroup>
 
 </Project>

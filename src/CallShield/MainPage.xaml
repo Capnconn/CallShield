@@ -5,7 +5,7 @@
              xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Toolkit.Popup;assembly=Syncfusion.Maui.Toolkit"
              xmlns:viewModels="clr-namespace:CallShield.UI.ViewModels"
              xmlns:converters="clr-namespace:CallShield.UI.Converters"
-             xmlns:models="clr-namespace:CallShield.UI.Models"
+             xmlns:models="clr-namespace:CallShield.Common.Models;assembly=CallShield.Common"
              x:Class="CallShield.UI.MainPage"
              x:DataType="viewModels:MainPageViewModel"
              x:Name="CallShieldMainPage">
@@ -62,7 +62,7 @@
                 </ContentView>
             </CollectionView.EmptyView>
             <CollectionView.GroupHeaderTemplate>
-                <DataTemplate x:DataType="models:BlockedCalls">
+                <DataTemplate x:DataType="models:BlockedCall">
                     <Label Text="{Binding Date}" FontSize="25" />
                 </DataTemplate>
             </CollectionView.GroupHeaderTemplate>

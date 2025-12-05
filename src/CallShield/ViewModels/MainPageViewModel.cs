@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
+using CallShield.Common.Models;
+using CallShield.DataAccess.Repositories;
 using CallShield.UI.Messages;
-using CallShield.UI.Models;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -12,24 +14,30 @@ namespace CallShield.UI.ViewModels
         private CallDetails _selectedCallDetails = null!;
         private bool _showPopup = false;
 
-        public MainPageViewModel()
+        public MainPageViewModel(ICallShieldRepository callShieldRepository)
         {
+            ListOfBlockedCalls = callShieldRepository.GetAllBlockedCalls().Take(100).ToObservableCollection();
+
             WeakReferenceMessenger.Default.Register<CallReceivedMessage>(this, (recipient, message) =>
             {
-                var blockedCallGroup = ListOfBlockedCalls.FirstOrDefault(x => x.Date.Equals(message.CallDetails.Date));
+                callShieldRepository.TryInsertCallDetails(message.CallDetails);
 
-                if (blockedCallGroup != null)
+                var orderedBlockedCalls = ListOfBlockedCalls.FirstOrDefault(x => x.Date.Equals(message.CallDetails.Date));
+
+                var newBlockedCall = new BlockedCall(message.CallDetails.Date);
+
+                if (orderedBlockedCalls != null)
                 {
-                    blockedCallGroup.Insert(0, message.CallDetails);
+                    ListOfBlockedCalls.Insert(0,newBlockedCall);
                 }
                 else
                 {
-                    ListOfBlockedCalls.Insert(0, new BlockedCalls(message.CallDetails.Date, [message.CallDetails]));
+                    ListOfBlockedCalls.Insert(0, newBlockedCall);
                 }
             });
         }
 
-        public ObservableCollection<BlockedCalls> ListOfBlockedCalls { get; set; } = [];
+        public ObservableCollection<BlockedCall> ListOfBlockedCalls { get; set; } = [];
 
         public bool ShowPopup
         {

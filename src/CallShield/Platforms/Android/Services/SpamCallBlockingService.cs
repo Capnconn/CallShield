@@ -1,6 +1,6 @@
 ﻿using Android.App;
 using Android.Telecom;
-using CallShield.UI.Models;
+using CallShield.Common.Models;
 using CallShield.UI.Processors;
 
 namespace CallShield.UI.Platforms.Android.Services;
@@ -52,7 +52,7 @@ public class SpamCallBlockingService : CallScreeningService
         }
 
 
-        _callProcessor.ProcessCall(new CallDetails(
+        _callProcessor.NotifyOfBlockedCall(new CallDetails(
             callDetails.CallerDisplayName ?? DefaultCallerDisplayName,
             phoneNumber,
             DateTime.Now));

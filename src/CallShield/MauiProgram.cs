@@ -1,4 +1,5 @@
-﻿using CallShield.UI.Processors;
+﻿using CallShield.DataAccess.Repositories;
+using CallShield.UI.Processors;
 using CallShield.UI.ViewModels;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
@@ -23,12 +24,16 @@ namespace CallShield.UI
 
             builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<ICallProcessor, CallProcessor>();
+            builder.Services.AddSingleton<ICallShieldRepository, CallShieldRepository>();
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
+            var app = builder.Build();
+            //var databaseBuilderService = app.Services.GetRequiredService<ICallShieldRepository>();
+            //databaseBuilderService.BuildDatabase();
 
-            return builder.Build();
+            return app;
         }
     }
 }
