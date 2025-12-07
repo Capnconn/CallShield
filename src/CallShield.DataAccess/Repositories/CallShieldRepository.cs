@@ -1,4 +1,4 @@
-﻿using CallShield.Common.Configuration;
+﻿using CallShield.DataAccess.Configuration;
 using CallShield.DataAccess.Models;
 using SQLite;
 
@@ -8,74 +8,47 @@ namespace CallShield.DataAccess.Repositories
     {
         void BuildDatabase();
 
-        List<Common.Models.BlockedCall> GetAllBlockedCalls();
+        List<BlockedCall> GetAllBlockedCalls();
 
-        void InsertBlockedCall(CallDetails callDetails);
-
-        void TryInsertCallDetails(Common.Models.CallDetails callDetails);
+        void InsertBlockedCall(BlockedCall callDetails);
     }
 
     public class CallShieldRepository : ICallShieldRepository
     {
-        private readonly SQLiteConnection _dbConnection = new SQLiteConnection(DatabaseConfiguration.DatabasePath);
+        private readonly SQLiteConnection _dbConnection = new(DatabaseConfiguration.DatabasePath, DatabaseConfiguration.Flags);
 
         public void BuildDatabase()
         {
-            if (!File.Exists(_dbConnection.DatabasePath))
+            _dbConnection.CreateTable<BlockedCall>();
+
+#if DEBUG
+            _dbConnection.DeleteAll<BlockedCall>();
+
+            if (_dbConnection.Query<BlockedCall>("SELECT COUNT(*) FROM blocked_call").Count < 50)
             {
-                _dbConnection.CreateTable<CallDetails>();
-                _dbConnection.CreateTable<BlockedCall>();
-
-                _dbConnection.Execute("ALTER TABLE call_details " +
-                                      "ADD FOREIGN KEY (phone_number) REFERENCES blocked_call(phone_number);");
-
+                for (int i = 0; i < 50; i++)
+                {
+                    this.InsertBlockedCall(new BlockedCall
+                    {
+                        Name = $"Test Name {i}",
+                        PhoneNumber = $"555-000-{i:D4}",
+                        Date = DateTime.Now.AddHours(i * -5)
+                    });
+                }
             }
+#endif
         }
 
-        public List<Common.Models.BlockedCall> GetAllBlockedCalls()
+        public List<BlockedCall> GetAllBlockedCalls()
+            => _dbConnection.Query<BlockedCall>("SELECT * FROM blocked_call ORDER BY date");
+
+        public void InsertBlockedCall(BlockedCall callDetails)
         {
-            var listOfBlockedCalls = _dbConnection.Query<BlockedCall>("SELECT * FROM blocked_calls ORDER BY date");
-
-            var convertedBlockedCalls = new List<Common.Models.BlockedCall>();
-
-            listOfBlockedCalls.ForEach(x =>
-            {
-                convertedBlockedCalls.Add(new Common.Models.BlockedCall(x.Date));
-            });
-
-            return convertedBlockedCalls;
-        }
-
-        public void InsertBlockedCall(CallDetails callDetails)
-        {
-            if (_dbConnection.Query<CallDetails>("SELECT * FROM call_details WHERE phone_number = ?", callDetails.PhoneNumber).FirstOrDefault() is null)
-            {
-                _dbConnection.Insert(callDetails);
-            }
-
             _dbConnection.Insert(new BlockedCall
             {
                 PhoneNumber = callDetails.PhoneNumber,
-                Date = DateTime.Now
-            });
-        }
-
-        public void TryInsertCallDetails(Common.Models.CallDetails callDetails)
-        {
-            if (!_dbConnection.Query<CallDetails>("SELECT COUNT(*) FROM call_details").Any())
-            {
-                _dbConnection.Insert(new CallDetails
-                {
-                    Date = callDetails.Date,
-                    PhoneNumber = callDetails.PhoneNumber,
-                    Name = callDetails.Name
-                });
-            }
-
-            _dbConnection.Insert(new BlockedCall
-            {
-                Date = callDetails.Date,
-                PhoneNumber = callDetails.PhoneNumber
+                Name = callDetails.Name,
+                Date = callDetails.Date
             });
         }
     }

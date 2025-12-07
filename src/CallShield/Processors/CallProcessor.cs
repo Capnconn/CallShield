@@ -9,13 +9,13 @@ namespace CallShield.UI.Processors
         /// <summary>
         /// Processes the call details.
         /// </summary>
-        /// <param name="callDetails">The details of the call to display.</param>
-        void NotifyOfBlockedCall(CallDetails callDetails);
+        /// <param name="blockedCall">The details of the blocked.</param>
+        void NotifyOfBlockedCall(CallDetails blockedCall);
     }
 
     public class CallProcessor() : ICallProcessor
     {
-        public void NotifyOfBlockedCall(CallDetails callDetails)
-            => WeakReferenceMessenger.Default.Send(new CallReceivedMessage(callDetails));
+        public void NotifyOfBlockedCall(CallDetails blockedCall)
+            => WeakReferenceMessenger.Default.Send(new CallReceivedMessage(blockedCall));
     }
 }

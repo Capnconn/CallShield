@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using CallShield.Common.Models;
-using CallShield.DataAccess.Repositories;
+using CallShield.Common.Services;
+using CallShield.UI.Common.Models;
 using CallShield.UI.Messages;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,29 +11,20 @@ namespace CallShield.UI.ViewModels
 {
     public partial class MainPageViewModel : ObservableObject
     {
-        private CallDetails _selectedCallDetails = null!;
+        private BlockedCall _selectedCallDetails = null!;
         private bool _showPopup = false;
 
-        public MainPageViewModel(ICallShieldRepository callShieldRepository)
+        public MainPageViewModel(ICallShieldService callShieldService)
         {
-            ListOfBlockedCalls = callShieldRepository.GetAllBlockedCalls().Take(100).ToObservableCollection();
-
+            ListOfBlockedCalls = callShieldService.GetAllBlockedCalls().Take(250).OrderByDescending(x => x.Date).ToObservableCollection();
+           
             WeakReferenceMessenger.Default.Register<CallReceivedMessage>(this, (recipient, message) =>
             {
-                callShieldRepository.TryInsertCallDetails(message.CallDetails);
-
-                var orderedBlockedCalls = ListOfBlockedCalls.FirstOrDefault(x => x.Date.Equals(message.CallDetails.Date));
-
-                var newBlockedCall = new BlockedCall(message.CallDetails.Date);
-
-                if (orderedBlockedCalls != null)
-                {
-                    ListOfBlockedCalls.Insert(0,newBlockedCall);
-                }
-                else
-                {
-                    ListOfBlockedCalls.Insert(0, newBlockedCall);
-                }
+                callShieldService.InsertBlockedCall(message.CallDetails);
+                var newBlockedCall = new CallDetails(message.CallDetails.Name, message.CallDetails.PhoneNumber, message.CallDetails.Date);
+                var correspondingCall = ListOfBlockedCalls.FirstOrDefault(x => x.Date.Equals(message.CallDetails.Date));
+                ListOfBlockedCalls.Insert(0, new BlockedCall(message.CallDetails.Date, [new CallDetails(message.CallDetails.Name, message.CallDetails.PhoneNumber, message.CallDetails.Date)]));
+                
             });
         }
 
@@ -54,7 +45,7 @@ namespace CallShield.UI.ViewModels
         }
 
         [RelayCommand]
-        public void LongPress(CallDetails callDetails)
+        public void LongPress(BlockedCall callDetails)
         {
             _selectedCallDetails = callDetails;
             ShowPopup = true;

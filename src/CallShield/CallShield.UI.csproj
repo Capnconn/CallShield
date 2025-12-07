@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net10.0-android</TargetFramework>
+		<TargetFramework>net9.0-android</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>CallShield.UI</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -24,7 +24,11 @@
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">36.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">35.0</SupportedOSPlatformVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -57,7 +61,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\CallShield.Common\CallShield.Common.csproj" />
-	  <ProjectReference Include="..\CallShield.DataAccess\CallShield.DataAccess.csproj" />
+	  <ProjectReference Include="..\CallShield.UI.Common\CallShield.UI.Common.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

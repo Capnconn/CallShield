@@ -1,7 +1,8 @@
 <Solution>
   <Project Path="src/CallShield.Common/CallShield.Common.csproj" Id="020d8d81-7f52-4576-84cf-c0cb57bc6cd7" />
   <Project Path="src/CallShield.DataAccess/CallShield.DataAccess.csproj" />
+  <Project Path="src/CallShield.UI.Common/CallShield.UI.Common.csproj" Id="bf160994-e2fd-4a79-94ea-12a19a6e2c9a" />
   <Project Path="src/CallShield/CallShield.UI.csproj">
-    <Deploy Solution="Debug|*" />
+    <Deploy />
   </Project>
 </Solution>
